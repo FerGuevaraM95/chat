@@ -3,6 +3,7 @@ const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
 const path = require("path");
+const cors = require("cors");
 
 const Sockets = require("./sockets");
 const { dbConection } = require("../database/config");
@@ -29,6 +30,10 @@ class Server {
     this.app.use(express.static(path.resolve(__dirname, "../public")));
 
     // Cors
+    this.app.use(cors());
+
+    // Parseo del body
+    this.app.use(express.json());
 
     // API endpoints
     this.app.use('/api/login', require('../router/auth'));
