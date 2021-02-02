@@ -51,12 +51,42 @@ const login = async (req, res) => {
 
   const {email, password} = req.body;
 
-  res.json({
-    ok: true,
-    msg: 'login',
-    email, 
-    password
-  });
+
+  try {
+
+    const userDB = await User.findOne({email});
+    if(!userDB) {
+      res.status(404).json({
+        ok: false,
+        msg: 'No existe una cuenta registrada con este email'
+      });
+    };
+
+    // Validar password
+    const validPassword = bcrypt.compareSync(password, userDB.password);
+    if(!validPassword) {
+      res.status(404).json({
+        ok: false,
+        msg: 'Contraseña inorrecta'
+      });
+    };
+
+    // Generar Token
+    const token = await generateJWT(userDB.id);
+
+    res.json({
+      ok: true,
+      user: userDB,
+      token
+    });
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: 'Hable con el administrador'
+    });
+  };
 }
 
 const renewToken = async (req, res) => {
