@@ -89,11 +89,22 @@ const login = async (req, res) => {
   };
 }
 
+// Renovar Token
 const renewToken = async (req, res) => {
+
+  const uid = req.uid;
+
+  // Generar nuevo Token
+  const token = await generateJWT(uid);
+
+  // Obtener el usuario por UID
+  const user = await User.findById(uid);
+
 
   res.json({
     ok: true,
-    msg: 'renew'
+    user,
+    token
   });
 }
 
