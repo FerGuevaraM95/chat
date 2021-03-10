@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Message = require('../models/message');
 
 const userConnected = async (uid) => {
   const user = await User.findById(uid);
@@ -26,10 +27,25 @@ const getUsers = async () => {
 
   return users;
 
-}
+};
+
+const saveMessage = async (payload) => {
+
+  const message = new Message(payload);
+  await message.save();
+  return message;
+
+  try {
+    
+  } catch (error) {
+    console.log(error);
+    return false;
+  };
+};
 
 module.exports = {
   userConnected,
   userDisconnected,
-  getUsers
+  getUsers,
+  saveMessage
 };
