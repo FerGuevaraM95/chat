@@ -39,9 +39,9 @@ class Sockets {
             // TODO: Escuchar cuando el cliente manda un mensaje
             socket.on('personal-message', async (payload) => {
                 const message = await saveMessage(payload);
-                console.log(message);
+                this.io.to(payload.to).emit('personal-message', message);
+                this.io.to(payload.from).emit('personal-message', message);
             });
-            // personal-message
 
             // TODO: Disconnect
             // Marcar en la DB que el usuario se desconecto
